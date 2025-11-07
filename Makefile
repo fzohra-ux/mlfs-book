@@ -2,8 +2,15 @@
 #        conda activate mlsfs
 #	conda install twofish clang -y
 
-include .env
-export $(shell sed 's/=.*//' .env)
+# include .env
+# export $(shell sed 's/=.*//' .env)
+
+-include .env
+
+ifneq (,$(wildcard .env))
+  export $(shell sed 's/=.*//' .env)
+endif
+
 	
 check-venv:
 	@if [ -n "$$CONDA_DEFAULT_ENV" ]; then \
