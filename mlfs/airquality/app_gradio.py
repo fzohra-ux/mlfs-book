@@ -5,7 +5,7 @@ import hopsworks
 from xgboost import XGBRegressor
 import joblib
 from openai import OpenAI
-from functions.llm_chain import (
+from .llm_chain import (
     load_model,
     get_llm_chain,
     generate_response,
