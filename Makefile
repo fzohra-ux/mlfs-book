@@ -67,6 +67,8 @@ aq-train:
 aq-inference:
 	ipython notebooks/airquality/2_air_quality_feature_pipeline.ipynb
 	ipython notebooks/airquality/4_air_quality_batch_inference.ipynb
+	ipython notebooks/airquality/4_air_quality_batch_inference-v2.ipynb
+	
 
 aq-feature-pipeline:
 	ipython notebooks/airquality/2_air_quality_feature_pipeline.ipynb
