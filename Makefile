@@ -68,6 +68,8 @@ aq-inference:
 	ipython notebooks/airquality/2_air_quality_feature_pipeline.ipynb
 	ipython notebooks/airquality/4_air_quality_batch_inference.ipynb
 	ipython notebooks/airquality/4_air_quality_batch_inference-v2.ipynb
+	ipython notebooks/airquality/2_air_quality_feature_pipeline-per_city.ipynb
+	ipython notebooks/airquality/4_air_quality_batch_inference-per_city.ipynb
 	
 
 aq-feature-pipeline:
