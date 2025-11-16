@@ -298,14 +298,13 @@ def backfill_predictions_for_monitoring(weather_fg, air_quality_df, monitor_fg, 
     df = df.drop('pm25', axis=1)
     monitor_fg.insert(df, write_options={"wait_for_job": True})
     return hindcast_df
-def backfill_predictions_for_monitoring_v2(weather_fg, air_quality_fg, monitor_fg, model):
-    # 1. Build a feature view that aligns air quality + weather
+def backfill_predictions_for_monitoring_v2(weather_fg, air_quality_fg, monitor_fg, model,street):
     features_fg = (
         air_quality_fg
         .select(['date', 'rolling_mean'])
         .join(
             weather_fg.select_features(),
-            on=['city']      # <-- join on BOTH date and city
+            on=['city']      
         )
     )
 
@@ -332,5 +331,53 @@ def backfill_predictions_for_monitoring_v2(weather_fg, air_quality_fg, monitor_f
 
     df = df.drop('pm25', axis=1)
     monitor_fg.insert(df, write_options={"wait_for_job": True})
+    return hindcast_df
+
+def backfill_predictions_for_monitoring_v2_1(weather_fg, air_quality_fg, monitor_fg, model, street):
+    # 1. Read full feature groups
+    weather_df     = weather_fg.read()
+    air_quality_df = air_quality_fg.read()
+
+    # 2. Keep only the rows for this street
+    air_street = air_quality_df[air_quality_df["street"] == street]
+
+    # (optional safety if street doesn’t exist)
+    if air_street.empty:
+        raise ValueError(f"No air quality data found for street: {street}")
+
+    # 3. Merge air quality (this street) with weather on date + city
+    features_df = pd.merge(
+        air_street[['date', 'rolling_mean','pm25','street', 'country']],
+        weather_df,
+        on="date"
+    )
+
+    # 4. Use the last 10 rows
+    features_df = features_df.sort_values('date', ascending=True).tail(10)
+
+    # 5. Predict PM2.5 with model
+    features_df['predicted_pm25'] = model.predict(
+        features_df[
+            [
+                'rolling_mean',
+                'temperature_2m_mean',
+                'precipitation_sum',
+                'wind_speed_10m_max',
+                'wind_direction_10m_dominant',
+            ]
+        ]
+    )
+
+    # 6. Fix types & add metadata
+    features_df['rolling_mean'] = features_df['rolling_mean'].astype('float64')
+    features_df['days_before_forecast_day'] = 1
+
+    # 7. hindcast_df keeps actual pm25 for evaluation
+    hindcast_df = features_df.copy()
+
+    # 8. Insert into monitoring FG without the outcome column
+    to_insert = features_df.drop(columns=['pm25'])
+    monitor_fg.insert(to_insert, write_options={"wait_for_job": True})
+
     return hindcast_df
 
