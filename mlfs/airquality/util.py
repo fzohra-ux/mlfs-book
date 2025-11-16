@@ -300,13 +300,43 @@ def backfill_predictions_for_monitoring(weather_fg, air_quality_df, monitor_fg, 
     return hindcast_df
 
 def backfill_predictions_for_monitoring_v2(weather_fg, air_quality_df, monitor_fg, model):
-    features_df = weather_fg.read()
-    features_df = features_df.sort_values(by=['date'], ascending=True)
-    features_df = features_df.tail(10)
-    features_df['predicted_pm25'] = model.predict(features_df[['rolling_mean', 'temperature_2m_mean', 'precipitation_sum', 'wind_speed_10m_max', 'wind_direction_10m_dominant']])
-    df = pd.merge(features_df, air_quality_df[['date','pm25','street','country']], on="date")
-    df['days_before_forecast_day'] = 1
-    hindcast_df = df
-    df = df.drop('pm25', axis=1)
-    monitor_fg.insert(df, write_options={"wait_for_job": True})
+   
+    weather_df = weather_fg.read()
+    merged = pd.merge(
+        weather_df,                                      
+        air_quality_df[['date', 'city', 'rolling_mean']],
+        on=['date', 'city'],                             
+        how='inner'
+    )
+
+    # 3. Keep last 10 rows for hindcast generation
+    features_df = merged.sort_values('date').tail(10)
+
+    # 4. Predict using model (rolling_mean + weather features)
+    features_df['predicted_pm25'] = model.predict(
+        features_df[['rolling_mean',
+                     'temperature_2m_mean',
+                     'precipitation_sum',
+                     'wind_speed_10m_max',
+                     'wind_direction_10m_dominant']]
+    )
+
+    # 5. Attach the real PM2.5 and monitoring metadata
+    hindcast_df = pd.merge(
+        features_df,
+        air_quality_df[['date', 'pm25', 'street', 'country']],
+        on='date',
+        how='left'
+    )
+
+    hindcast_df['days_before_forecast_day'] = 1
+    hindcast_df['rolling_mean'] = hindcast_df['rolling_mean'].astype('float64')
+
+    # 6. Insert into monitoring FG
+    monitor_fg.insert(
+        hindcast_df.drop(columns=['pm25']),
+        write_options={"wait_for_job": True}
+    )
+
     return hindcast_df
+
