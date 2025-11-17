@@ -4,8 +4,8 @@
 
 {% include air-quality.html %}
 
-![Forecast](./assets/img/pm25_forecast.png)
-![Forecast (v2)](./assets/img/pm25_forecast_v2.png)
+<!-- ![Forecast](./assets/img/pm25_forecast.png)
+![Forecast (v2)](./assets/img/pm25_forecast_v2.png) -->
 ![Forecast (barcelone)](./assets/img/pm25_forecast_barcelona.png)
 ![Forecast (barcelona_eixample)](./assets/img/pm25_forecast_barcelona_eixample.png)
 ![Forecast (barcelona_gracia_st_gervasi)](./assets/img/pm25_forecast_barcelona_gracia_st_gervasi.png)
@@ -22,8 +22,8 @@ powered by a [function-calling LLM](https://www.hopsworks.ai/dictionary/function
 
 1-Day Hindcast: Predictions vs Outcomes
 
-![Hindcast](./assets/img/pm25_hindcast_1day.png)
-![Hindcast (v2)](./assets/img/pm25_hindcast_1day_v2.png)
+<!-- ![Hindcast](./assets/img/pm25_hindcast_1day.png)
+![Hindcast (v2)](./assets/img/pm25_hindcast_1day_v2.png) -->
 ![Hindcast barcelone)](./assets/img/pm25_hindcast_1day_barcelona.png)
 ![Hindcast (barcelona_eixample)](./assets/img/pm25_hindcast_1day_barcelona_eixample.png)
 ![Hindcast (barcelona_gracia_st_gervasi)](./assets/img/pm25_hindcast_1day_barcelona_gracia_st_gervasi.png)
