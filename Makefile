@@ -59,10 +59,10 @@ aq-clean:
 	python mlfs/clean_hopsworks_resources.py aq
 
 aq-features:
-	ipython notebooks/airquality/1_air_quality_feature_backfill.ipynb
+	ipython notebooks/airquality/1_air_quality_feature_backfill-per_city.ipynb
 
 aq-train:
-	ipython notebooks/airquality/3_air_quality_training_pipeline.ipynb
+	ipython notebooks/airquality/3_air_quality_training_pipeline-per_city.ipynb
 
 aq-inference:
 	ipython notebooks/airquality/2_air_quality_feature_pipeline-per_city.ipynb
@@ -70,7 +70,7 @@ aq-inference:
 	
 
 aq-feature-pipeline:
-	ipython notebooks/airquality/2_air_quality_feature_pipeline.ipynb
+	ipython notebooks/airquality/2_air_quality_feature_pipeline-per_city.ipynb
 
 aq-llm:
 	ipython notebooks/airquality/5_function_calling.ipynb
