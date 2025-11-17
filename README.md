@@ -1,6 +1,6 @@
 # Air Quality Prediction System for Catalunya — ID2223 Lab 1 (Grade A)
 
-This repository contains a complete Machine Learning system for predicting PM2.5 levels for **all air quality sensors in Catalunya**, using the Hopsworks Feature Store, GitHub Actions, and a fully automated serverless ML pipeline.
+This repository contains a complete Machine Learning system for predicting PM2.5 levels for **six air quality sensors in Catalunya**, using the Hopsworks Feature Store, GitHub Actions, and a fully automated serverless ML pipeline.
 
 ---
 
